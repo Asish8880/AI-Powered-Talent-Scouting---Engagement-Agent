@@ -36,6 +36,37 @@ def rank_candidates(
     return response.json()
 
 
+def format_tag_list(items: List[str], empty_text: str) -> str:
+    cleaned_items = [str(item).strip() for item in items if str(item).strip()]
+    if not cleaned_items:
+        return empty_text
+    return " | ".join(f"`{item}`" for item in cleaned_items)
+
+
+def render_parsed_jd(parsed: Dict[str, Any]) -> None:
+    role = parsed.get("role") or "Not detected"
+    experience = parsed.get("experience") or "Not specified"
+    skills = parsed.get("skills", [])
+    keywords = parsed.get("keywords", [])
+
+    role_col, exp_col = st.columns(2)
+    with role_col:
+        st.metric("Target Role", role)
+    with exp_col:
+        st.metric("Experience", experience)
+
+    skills_text = format_tag_list(skills, "No key skills detected")
+    keywords_text = format_tag_list(keywords, "No supporting keywords detected")
+
+    details_col, keywords_col = st.columns(2, vertical_alignment="top")
+    with details_col:
+        st.markdown("**Core Skills**")
+        st.markdown(skills_text)
+    with keywords_col:
+        st.markdown("**Supporting Keywords**")
+        st.markdown(keywords_text)
+
+
 def render_candidate_card(result: Dict[str, Any], rank: int) -> None:
     candidate = result["candidate"]
     scores_col, profile_col = st.columns([1, 2], vertical_alignment="top")
@@ -111,7 +142,8 @@ if st.button("Find Candidates", type="primary", use_container_width=True):
             else:
                 parsed = result["parsed_jd"]
                 st.subheader("Parsed JD")
-                st.json(parsed)
+                with st.container(border=True):
+                    render_parsed_jd(parsed)
 
                 st.subheader("Ranked Shortlist")
                 for index, candidate_result in enumerate(result["results"], start=1):
