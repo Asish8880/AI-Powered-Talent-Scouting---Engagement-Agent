@@ -1,6 +1,6 @@
 # AI-Powered Talent Scouting & Engagement Agent
 
-This project is a complete hackathon-ready system that parses a job description, finds matching candidates from a CSV dataset, simulates recruiter outreach, and returns a ranked shortlist with explainable scoring.
+This project is a system that parses a job description, finds matching candidates from a CSV dataset, simulates recruiter outreach, and returns a ranked shortlist with explainable scoring.
 
 ## What it does
 
@@ -13,11 +13,6 @@ This project is a complete hackathon-ready system that parses a job description,
    - Interest Score
    - Final Score = `(0.7 * Match Score) + (0.3 * Interest Score)` by default
 6. Explains both why a candidate matched and why they may not have ranked higher
-
-The project works in two modes:
-
-- `Gemini mode`: if `GEMINI_API_KEY` is set, Gemini is used for JD parsing and conversation generation
-- `Mock mode`: if no API key is present, the app falls back to deterministic rule-based logic so the full flow still works locally
 
 ## Architecture
 
@@ -173,11 +168,6 @@ On Windows PowerShell:
 ```powershell
 $env:API_BASE_URL="http://127.0.0.1:8000"
 ```
-
-To enable Gemini:
-
-```powershell
-$env:GEMINI_API_KEY="your_api_key"
 ```
 
 ## Sample demo input
@@ -188,4 +178,3 @@ The ideal candidate has 4+ years of experience in Python, FastAPI, machine learn
 prompt engineering, Docker, AWS, and REST APIs. Experience with RAG, evaluation,
 and stakeholder communication is a plus.
 ```
-
