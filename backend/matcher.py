@@ -4,7 +4,7 @@ import math
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -104,8 +104,16 @@ class CandidateMatcher:
                 )
             )
 
-        matches.sort(key=lambda item: item.match_score, reverse=True)
-        return matches[:top_k]
+        deduplicated_matches: Dict[str, CandidateMatch] = {}
+        for match in matches:
+            candidate_key = self._candidate_key(match.candidate)
+            existing_match = deduplicated_matches.get(candidate_key)
+            if existing_match is None or match.match_score > existing_match.match_score:
+                deduplicated_matches[candidate_key] = match
+
+        unique_matches = list(deduplicated_matches.values())
+        unique_matches.sort(key=lambda item: item.match_score, reverse=True)
+        return unique_matches[:top_k]
 
     @staticmethod
     def _ordered_intersection(jd_skills: List[str], candidate_skills: List[str]) -> List[str]:
@@ -115,6 +123,16 @@ class CandidateMatcher:
             if skill.lower() in candidate_lookup:
                 overlap.append(candidate_lookup[skill.lower()])
         return overlap
+
+    @staticmethod
+    def _candidate_key(candidate: dict) -> str:
+        fields = (
+            str(candidate.get("name", "")).strip().lower(),
+            str(candidate.get("role", "")).strip().lower(),
+            str(candidate.get("experience", "")).strip().lower(),
+            str(candidate.get("bio", "")).strip().lower(),
+        )
+        return "|".join(fields)
 
     @staticmethod
     def _parse_years(value: str) -> int:
