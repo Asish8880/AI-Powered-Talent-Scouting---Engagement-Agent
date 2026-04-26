@@ -65,7 +65,7 @@ Default formula:
 
 `Final Score = (0.7 * Match Score) + (0.3 * Interest Score)`
 
-The frontend also lets you tweak the weights, and the backend normalizes them before calculating final scores.
+The backend uses default scoring weights and normalizes them before calculating final scores.
 
 ## API endpoints
 
