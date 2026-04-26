@@ -168,9 +168,8 @@ On Windows PowerShell:
 ```powershell
 $env:API_BASE_URL="http://127.0.0.1:8000"
 ```
-```
 
-## Sample demo input
+Sample demo input
 
 ```text
 We are hiring a Senior AI Engineer to build LLM-powered recruiting workflows.
